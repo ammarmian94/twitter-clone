@@ -19,7 +19,7 @@ export const protectRoute = async (req, res, next) => {
     }
 
     req.user = user;
-    // console.log("before next");
+    console.log("Protected Route");
     // console.log(user);
     next();
   } catch (error) {
