@@ -30,7 +30,7 @@ export const followUnfollowUser = async (req, res) => {
     const currentUser = await User.findById(req.user._id);
 
     if (!userToModify || !currentUser) {
-      res.status(404).json({ error: "User not found" });
+      res.status(404).json({ message: "User not found" });
     }
 
     const isFollowing = currentUser.following.includes(id);
