@@ -1,4 +1,5 @@
 // Packages
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import { connectMongoDB } from "./db/connectMongoDB.js";
@@ -20,6 +21,7 @@ cloudinary.config({
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const __dirname = path.resolve();
 
 app.use(express.json({ limit: "5mb" })); //to parse request.body, parsing json
 app.use(express.urlencoded({ extended: true })); //to parse form data
@@ -31,7 +33,15 @@ app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/notifications", notificationRoutes);
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+  // app.use(express.static("/frontend/dist"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  });
+}
+
 app.listen(PORT, () => {
-  console.log("Server is running!");
+  console.log("Server is running! " + PORT);
   connectMongoDB();
 });
